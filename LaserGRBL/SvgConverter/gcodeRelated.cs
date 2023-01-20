@@ -508,8 +508,8 @@ namespace LaserGRBL.SvgConverter
 				if (((gnr > 0) || (lastx != x) || (lasty != y) || (lastz != tz)))  // else nothing to do
 				{
 					// For Marlin, we must change this line to :
-					// if (lastg != gnr || firmwareType == Firmware.Marlin) { gcodeTmp.AppendFormat("G{0}", frmtCode(gnr)); isneeded = true; }
-					if (lastg != gnr) { gcodeTmp.AppendFormat("G{0}", frmtCode(gnr)); isneeded = true; }
+					if (lastg != gnr || firmwareType == Firmware.Marlin) { gcodeTmp.AppendFormat("G{0}", frmtCode(gnr)); isneeded = true; }
+					// if (lastg != gnr) { gcodeTmp.AppendFormat("G{0}", frmtCode(gnr)); isneeded = true; }
 
 					if (lastx != x) { gcodeTmp.AppendFormat("X{0}", frmtNum(x)); isneeded = true; }
 					if (lasty != y) { gcodeTmp.AppendFormat("Y{0}", frmtNum(y)); isneeded = true; }
@@ -530,6 +530,12 @@ namespace LaserGRBL.SvgConverter
 					{
 						gcodeTmp.AppendFormat("S{0}", frmtNum(gcodeSpindleSpeed));
 						lasts = gcodeSpindleSpeed;
+						isneeded = true;
+					}
+					// Marlin firmware need it.
+					if (firmwareType == Firmware.Marlin)
+                    {
+						gcodeTmp.AppendFormat("S{0}", frmtNum(gnr == 1 ? gcodeSpindleSpeed: 0));
 						isneeded = true;
 					}
 					gcodeTmp.AppendFormat("{0}\r\n", cmt);

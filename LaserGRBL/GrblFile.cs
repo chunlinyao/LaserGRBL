@@ -345,8 +345,8 @@ namespace LaserGRBL
 
 							//set speed to markspeed
 							// For marlin, need to specify G1 each time :
-							// list.Add(new GrblCommand(String.Format("G1 F{0}", c.markSpeed)));
-							list.Add(new GrblCommand(String.Format("F{0}", c.markSpeed)));
+							list.Add(new GrblCommand(String.Format("G1 F{0}", c.markSpeed)));
+							// list.Add(new GrblCommand(String.Format("F{0}", c.markSpeed)));
 
 							c.vectorfilling = true;
 							ImageLine2Line(resampled, c);
@@ -397,8 +397,8 @@ namespace LaserGRBL
 					gc.AddRange(Potrace.Export2GCode(plist, c.oX, c.oY, c.res, c.lOn, c.lOff, bmp.Size, skipcmd));
 
 				// For marlin, need to specify G1 each time :
-				//list.Add(new GrblCommand(String.Format("G1 F{0}", c.borderSpeed)));
-				list.Add(new GrblCommand(String.Format("F{0}", c.borderSpeed)));
+				list.Add(new GrblCommand(String.Format("G1 F{0}", c.borderSpeed)));
+				//list.Add(new GrblCommand(String.Format("F{0}", c.borderSpeed)));
 				foreach (string code in gc)
 					list.Add(new GrblCommand(code));
 			}
@@ -481,7 +481,7 @@ namespace LaserGRBL
 
 			//set speed to markspeed						
 			// For marlin, need to specify G1 each time :
-			//list.Add(new GrblCommand(String.Format("G1 F{0}", c.markSpeed)));
+			list.Add(new GrblCommand(String.Format("G1 F{0}", c.markSpeed)));
 			//list.Add(new GrblCommand(String.Format("F{0}", c.markSpeed))); //replaced by the first move to offset and set speed
 
 			ImageLine2Line(bmp, c);
@@ -499,7 +499,7 @@ namespace LaserGRBL
 		}
 
 		// For Marlin, as we sen M106 command, we need to know last color send
-		//private int lastColorSend = 0;
+		// private int lastColorSend = 0;
 		private void ImageLine2Line(Bitmap bmp, L2LConf c)
 		{
 			bool fast = true;
@@ -536,7 +536,8 @@ namespace LaserGRBL
 				//else
 				//{
 
-				if (changeGMode)
+				// For Marlin
+				if (changeGMode || c.firmwareType == Firmware.Marlin)
 					temp.Add(new GrblCommand(String.Format("{0} {1}", fast ? skipcmd : "G1", seg.ToGCodeNumber(ref cumX, ref cumY, c))));
 				else
 					temp.Add(new GrblCommand(seg.ToGCodeNumber(ref cumX, ref cumY, c)));
